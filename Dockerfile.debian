@@ -1,0 +1,23 @@
+FROM debian:bookworm-slim AS build
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    cmake \
+    make \
+    gcc \
+    g++ \
+    libfdt-dev
+
+
+WORKDIR /utils
+COPY . .
+
+RUN cmake -S . -B build
+RUN cmake --build build
+RUN cmake --install build
+
+FROM debian:bookworm-slim
+
+COPY --from=build /usr/local/bin/ /usr/local/bin/
+COPY --from=build /usr/local/share/ /usr/local/share/
