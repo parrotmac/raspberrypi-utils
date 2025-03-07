@@ -1,3 +1,7 @@
+# Fork: Adds Pre-built Docker Container
+
+This fork adds prebuilt container images of the included tools. Useful on custom images that may not have these tools available (e.g. a Yocto build).
+
 # utils
 A collection of scripts and simple applications
 
