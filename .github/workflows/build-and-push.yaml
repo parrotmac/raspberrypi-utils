@@ -1,0 +1,35 @@
+name: Build and Push Docker Image
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-22.04
+    permissions:
+      packages: write
+    steps:
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Build
+        uses: docker/build-push-action@v5
+        with:
+          file: Dockerfile.debian
+          platforms: linux/arm64,linux/arm/v7,linux/arm/v6
+          push: true
+          tags: |
+            ghcr.io/uinta-labs/parrotmac/raspberrypi-utils:${{ github.sha }}
+            ghcr.io/uinta-labs/parrotmac/raspberrypi-utils:latest
